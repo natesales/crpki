@@ -41,10 +41,15 @@ print("Running query for " + prefix, end="\r")
 for i in range(0, 5):
     response = requests.post("https://rpki.cloudflare.com/api/graphql", json={"query": query})
     if response.status_code == 200:
-        print(Color.BOLD + prefix + Color.END + (" " * (shutil.get_terminal_size().columns - len(prefix))))
         if response.json()["data"]["bgp"] is None:
             print(Color.RED + "[!]" + Color.END + " Prefix " + prefix + " doesn't look like a valid prefix.")
             exit(1)
+
+        if not response.json()["data"]["bgp"]:
+            print(Color.RED + "[!]" + Color.END + " No ROAs found for " + prefix + ", try the parent prefix.")
+            exit(1)
+
+        print(Color.BOLD + prefix + Color.END + (" " * (shutil.get_terminal_size().columns - len(prefix))))
 
         for origin in response.json()["data"]["bgp"]:
             state = origin["validation"]["state"]
