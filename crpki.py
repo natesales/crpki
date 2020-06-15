@@ -1,6 +1,7 @@
 #!/usr/bin/python3
-import sys
 import shutil
+import sys
+
 import requests
 
 
@@ -58,7 +59,7 @@ for i in range(0, 5):
             elif state == "Invalid":
                 state = Color.RED + "Invalid" + Color.END
 
-            print("  AS" + str(origin["asn"]) + " " + state)
+            print("  AS" + str(origin["asn"]) + (" " * (8 - len(str(origin["asn"])))) + state)
 
             for roa in origin["validation"]["covering"]:
                 print("    - " + roa["prefix"]["prefix"] + " max length " + str(roa["prefix"]["maxLength"]))
